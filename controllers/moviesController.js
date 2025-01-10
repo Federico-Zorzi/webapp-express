@@ -129,6 +129,11 @@ function destroy(req, res) {
   }
 
   const moviesSql = ` DELETE FROM movies WHERE id = ?`;
+
+  connection.query(moviesSql, [id], (err) => {
+    if (err) return res.status(500).json({ error: "Database query failed" });
+    res.sendStatus(204);
+  });
 }
 
 const createImgPath = (imgPath) => {
