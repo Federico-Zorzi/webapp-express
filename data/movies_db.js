@@ -1,3 +1,4 @@
+// DOTENV CONFIGURATION
 require("dotenv").config();
 
 // MYSQL2
