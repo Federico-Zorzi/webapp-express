@@ -1,4 +1,4 @@
-const connection = require("../data/db");
+const connection = require("../data/movies_db");
 
 // * INDEX
 function index(req, res) {
@@ -13,6 +13,13 @@ function index(req, res) {
 // * SHOW
 function show(req, res) {
   const id = parseInt(req.params.id);
+
+  if (isNaN(id)) {
+    const err = new Error("Id required not valid");
+    err.status = 400;
+    err.error = "Bad request by client";
+    throw err;
+  }
 }
 
 // * STORE
@@ -24,15 +31,38 @@ function store(req, res) {
 function update(req, res) {
   const id = parseInt(req.params.id);
   const { title, content, image } = req.body;
+
+  if (isNaN(id)) {
+    const err = new Error("Id required not valid");
+    err.status = 400;
+    err.error = "Bad request by client";
+    throw err;
+  }
 }
 
 // * MODIFY
 function modify(req, res) {
   const id = parseInt(req.params.id);
   const { title, content, image } = req.body;
+
+  if (isNaN(id)) {
+    const err = new Error("Id required not valid");
+    err.status = 400;
+    err.error = "Bad request by client";
+    throw err;
+  }
 }
 
 // * DESTROY
-function destroy(req, res) {}
+function destroy(req, res) {
+  const id = parseInt(req.params.id);
+
+  if (isNaN(id)) {
+    const err = new Error("Id required not valid");
+    err.status = 400;
+    err.error = "Bad request by client";
+    throw err;
+  }
+}
 
 module.exports = { index, show, store, update, modify, destroy };
