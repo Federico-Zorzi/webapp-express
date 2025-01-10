@@ -1,0 +1,16 @@
+{
+  "name": "webapp-express",
+  "version": "1.0.0",
+  "description": "Ciao ragazzi,\r esercizio di oggi: Setup Web App Express\r repo: webapp-express\r Ciao ragazzi, è ora di mettere alla prova le vostre conoscenze iniziando a costruire la vostra prima app completa!",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node app.js",
+    "dev": "node --watch app.js"
+  },
+  "author": "Federico Zorzi",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.21.2"
+  }
+}
