@@ -67,16 +67,28 @@ function show(req, res) {
 
 // STORE
 function store(req, res) {
-  const {
-    title,
-    director,
-    genre,
-    release_year,
-    abstract,
-    image,
-    created_at,
-    updated_at,
-  } = req.body;
+  const { title, director, genre, release_year, abstract, image } = req.body;
+
+  if (!title || !director) {
+    const err = new Error("Check all parameters passed");
+    err.status = 400;
+    err.error = "Bad request by client";
+    throw err;
+  }
+
+  const moviesSql = `
+              INSERT INTO movies (title, director, genre, release_year, abstract, image) 
+              VALUES (?, ?, ?, ?, ?, ?);
+              `;
+
+  connection.query(
+    moviesSql,
+    [title, director, genre, release_year, abstract, image],
+    (err, results) => {
+      if (err) return res.status(500).json({ error: "Database query failed" });
+      res.json({ title, director, genre, release_year, abstract, image });
+    }
+  );
 }
 
 // UPDATE
@@ -115,6 +127,8 @@ function destroy(req, res) {
     err.error = "Bad request by client";
     throw err;
   }
+
+  const moviesSql = ` DELETE FROM movies WHERE id = ?`;
 }
 
 const createImgPath = (imgPath) => {
