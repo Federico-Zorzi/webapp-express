@@ -13,7 +13,10 @@ function index(req, res) {
 
   connection.query(moviesSql, (err, results) => {
     if (err) return res.status(500).json({ error: "Database query failed" });
-    res.json(results);
+    let movies = results.map((movie) => {
+      return { ...movie, image: createImgPath(movie.image) };
+    });
+    res.json(movies);
   });
 }
 
@@ -51,6 +54,7 @@ function show(req, res) {
       return res.status(404).json({ error: "Id required not found" });
 
     const movie = moviesResults[0];
+    movie.image = createImgPath(movie.image);
     console.log(movie);
 
     connection.query(reviewsSql, [id], (err, reviewsResults) => {
@@ -63,7 +67,16 @@ function show(req, res) {
 
 // STORE
 function store(req, res) {
-  const { title, content, image } = req.body;
+  const {
+    title,
+    director,
+    genre,
+    release_year,
+    abstract,
+    image,
+    created_at,
+    updated_at,
+  } = req.body;
 }
 
 // UPDATE
@@ -105,7 +118,7 @@ function destroy(req, res) {
 }
 
 const createImgPath = (imgPath) => {
-  return;
+  return `${SERVER_DOMAIN}:${SERVER_PORT}/img/${imgPath}`;
 };
 
 module.exports = { index, show, store, update, modify, destroy };
