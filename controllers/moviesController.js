@@ -94,7 +94,7 @@ function store(req, res) {
 // UPDATE
 function update(req, res) {
   const id = parseInt(req.params.id);
-  const { title, content, image } = req.body;
+  const { title, director, genre, release_year, abstract, image } = req.body;
 
   if (isNaN(id)) {
     const err = new Error("Id required not valid");
@@ -102,6 +102,27 @@ function update(req, res) {
     err.error = "Bad request by client";
     throw err;
   }
+
+  if (!title || !director) {
+    const err = new Error("Check all parameters passed");
+    err.status = 400;
+    err.error = "Bad request by client";
+    throw err;
+  }
+
+  const moviesSql = `UPDATE movies 
+              SET title = ?, director = ?, genre = ?, release_year = ?, abstract = ?, image = ?
+              WHERE (id = ?);
+              `;
+
+  connection.query(
+    moviesSql,
+    [title, director, genre, release_year, abstract, image, id],
+    (err, results) => {
+      if (err) return res.status(500).json({ error: "Database query failed" });
+      res.json({ id, title, director, genre, release_year, abstract, image });
+    }
+  );
 }
 
 // MODIFY
