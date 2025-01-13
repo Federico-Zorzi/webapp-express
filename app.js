@@ -4,11 +4,13 @@ require("dotenv").config();
 // EXPRESS CONFIGURATION
 const express = require("express");
 const app = express();
-const { SERVER_DOMAIN, SERVER_PORT } = process.env;
+const { SERVER_DOMAIN, SERVER_PORT, FRONTEND_DOMAIN } = process.env;
+const cors = require("cors");
 
 // MIDDLEWARES
 app.use(express.json());
 app.use(express.static("public"));
+app.use(cors(FRONTEND_DOMAIN));
 
 // ROUTERS CONFIGURATION
 const moviesRouter = require("./routers/moviesRouter");
