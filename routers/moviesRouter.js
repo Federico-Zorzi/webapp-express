@@ -10,6 +10,8 @@ router.get("/:id", moviesController.show);
 
 router.post("/", moviesController.store);
 
+router.post("/:id/reviews", moviesController.reviewsStore);
+
 router.put("/:id", moviesController.update);
 
 router.patch("/:id", moviesController.modify);

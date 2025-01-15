@@ -45,7 +45,8 @@ function show(req, res) {
                     FROM reviews
                     JOIN movies
                     ON movies.id = reviews.movie_id
-                    WHERE movies.id = ?;
+                    WHERE movies.id = ?
+                    ORDER BY reviews.updated_at DESC;
                     `;
 
   connection.query(moviesSql, [id], (err, moviesResults) => {
@@ -55,7 +56,6 @@ function show(req, res) {
 
     const movie = moviesResults[0];
     movie.image = createImgPath(movie.image);
-    console.log(movie);
 
     connection.query(reviewsSql, [id], (err, reviewsResults) => {
       if (err) return res.status(500).json({ error: "Database query failed" });
@@ -89,6 +89,29 @@ function store(req, res) {
       res.json({ title, director, genre, release_year, abstract, image });
     }
   );
+}
+
+// STORE REVIEWS
+function reviewsStore(req, res) {
+  const movieId = parseInt(req.params.id);
+  const { name, text, vote } = req.body;
+
+  if (!name || !text || !vote) {
+    const err = new Error("Check all parameters passed");
+    err.status = 400;
+    err.error = "Bad request by client";
+    throw err;
+  }
+
+  const reviewsSql = `
+              INSERT INTO reviews (name, text, vote, movie_id) 
+              VALUES (?, ?, ?, ?);
+              `;
+
+  connection.query(reviewsSql, [name, text, vote, movieId], (err) => {
+    if (err) return res.status(500).json({ error: "Database query failed" });
+    res.json({ name, text, vote, movieId });
+  });
 }
 
 // UPDATE
@@ -161,4 +184,4 @@ const createImgPath = (imgPath) => {
   return `${SERVER_DOMAIN}:${SERVER_PORT}/img/${imgPath}`;
 };
 
-module.exports = { index, show, store, update, modify, destroy };
+module.exports = { index, show, store, reviewsStore, update, modify, destroy };
