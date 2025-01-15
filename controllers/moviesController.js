@@ -20,6 +20,31 @@ function index(req, res) {
   });
 }
 
+// INDEX REVIEWS
+function indexReviews(req, res) {
+  const id = parseInt(req.params.id);
+  const reviewsSql = `
+                    SELECT * 
+                    FROM reviews
+                    WHERE movie_id = ?
+                    ORDER BY reviews.updated_at DESC;
+                    `;
+
+  if (isNaN(id)) {
+    const err = new Error("Id required not valid");
+    err.status = 400;
+    err.error = "Bad request by client";
+    throw err;
+  }
+
+  connection.query(reviewsSql, [id], (err, reviewsResult) => {
+    if (err) return res.status(500).json({ error: "Database query failed" });
+    if (reviewsResult.length === 0)
+      return res.status(404).json({ error: "Id required not found" });
+    return res.json(reviewsResult);
+  });
+}
+
 // SHOW
 function show(req, res) {
   const id = parseInt(req.params.id);
@@ -92,7 +117,7 @@ function store(req, res) {
 }
 
 // STORE REVIEWS
-function reviewsStore(req, res) {
+function storeReviews(req, res) {
   const movieId = parseInt(req.params.id);
   const { name, text, vote } = req.body;
 
@@ -184,4 +209,13 @@ const createImgPath = (imgPath) => {
   return `${SERVER_DOMAIN}:${SERVER_PORT}/img/${imgPath}`;
 };
 
-module.exports = { index, show, store, reviewsStore, update, modify, destroy };
+module.exports = {
+  index,
+  indexReviews,
+  show,
+  store,
+  storeReviews,
+  update,
+  modify,
+  destroy,
+};
